@@ -54,15 +54,15 @@ namespace Emvisi
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "568052270022115",
+               appSecret: "44949c2179633213a09454cd78a146e8");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "97930288692-9cgfq3oe95dtmg71k5hdplksuk84jjcr.apps.googleusercontent.com",
+                ClientSecret = "pPm_ol6DtXo2O1RnkH9PMcmx"
+            });
         }
     }
 }
