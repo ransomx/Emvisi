@@ -71,4 +71,4 @@ C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emv
 C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emvisi.csproj.GenerateResource.Cache
 C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emvisi.Migrations.Greeting.resources
 C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emvisi.Resources.Filepaths.resources
-C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emvisi.MigrationsBI.BusinessInteligenceEssentials.resources
+C:\Users\xrans\documents\visual studio 2015\Projects\Emvisi\Emvisi\obj\Debug\Emvisi.MigrationsBI.GymInitial.resources

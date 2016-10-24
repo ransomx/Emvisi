@@ -61,6 +61,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /Content/gyms/.
+        /// </summary>
+        public static string Gyms {
+            get {
+                return ResourceManager.GetString("Gyms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /Content/Media/Icons/.
         /// </summary>
         public static string Icons {

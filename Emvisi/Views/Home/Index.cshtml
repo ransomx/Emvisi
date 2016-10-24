@@ -1,88 +1,210 @@
-﻿@{
+﻿@model Emvisi.Models.MapViewModels
+@{
     ViewBag.Title = "Home Page";
 }
-
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkTzo67cQiZmcSYXCZ82gpWvyu2Uon2g0&callback=Initialize"
         type="text/javascript"></script>
 
 <script type="text/javascript">
-    // Where all the fun happens
-    function Initialize() {
+    var map;
+    var markersMap = [];
 
-        // Google has tweaked their interface somewhat - this tells the api to use that new UI
-        google.maps.visualRefresh = true;
-        var Tunisie = new google.maps.LatLng(36.81881, 10.16596);
+    $(function () {
+        $(document).on('click', '.fetchable', function (e) {
+            e.preventDefault ? e.preventDefault() : (e.returnValue = false);
 
-        // These are options that set initial zoom level, where the map is centered globally to start, and the type of map to show
-        var mapOptions = {
-            zoom: 8,
-            center: Tunisie,
-            mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
-        };
+            var $contentDiv = $('#head-content'),
+            url = $(this).data('url');
 
-        // This makes the div with id "map_canvas" a google map
-        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
-        // a sample list of JSON encoded data of places to visit in Tunisia
-        // you can either make up a JSON list server side, or call it from a controller using JSONResult
-
-        var markers;
-
-        $.ajax({
-            url: '/Map/GetMarkers',
-            type: "GET",
-            data: "{}",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                markers = data;
-
-                for (i = 0; i < markers.items.length; i++) {
-
-                    var marker = new google.maps.Marker({
-                        'position': new google.maps.LatLng(markers.items[i].GeoLong, markers.items[i].GeoLat),
-                        'map': map,
-                        'title': markers.items[i].PlaceName,
-                        'icon': '@Resources.Filepaths.Icons'+markers.items[i].Icon
-                    });
-
-                    // put in some information about each json object - in this case, the opening hours.
-                    var infowindow = new google.maps.InfoWindow({
-                    content: "<div class='infoDiv'><h2>" + markers.items[i].PlaceName + "</div></div>"
+            $.get(url, function (data) {
+                $contentDiv.fadeOut(100, function () {
+                    $contentDiv.html(data);
+                    $contentDiv.fadeIn(100);
                 });
-
-                // finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
-                google.maps.event.addListener(marker, 'click', function () {
-                    infowindow.open(map, marker);
-                });
-            }
-        },
-            error: function(){
-                alert('Error occured');
-            }
+            });
+        });
     });
+
+    function onBeginLoadView(){
+        //$("#head-content").fadeOut(200);
     }
+
+    function onCompleteLoadView() {
+        $("#head-content").fadeIn(200);
+    }
+
+        // Where all the fun happens
+        function Initialize() {
+            // Google has tweaked their interface somewhat - this tells the api to use that new UI
+            google.maps.visualRefresh = true;
+            var Kristianstad = new google.maps.LatLng(56.02939360000001, 14.156677800000011);
+
+            // These are options that set initial zoom level, where the map is centered globally to start, and the type of map to show
+            var mapOptions = {
+                zoom: 8,
+                center: Kristianstad,
+                mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP,
+                scrollwheel: false
+            };
+            map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+            UpdateMap();
+        }
+
+        function UpdateMap() {
+            var region, city, search, activity;
+            var markers;
+            $.ajax({
+                url: '/Map/GetMarkers',
+                type: "GET",
+                data: {
+                    selectRegion: $("#selectRegion option:selected").val(),
+                    selectCity: $("#selectCity option:selected").val(),
+                    selectActivity: $("#selectActivity option:selected").val(),
+                    searchString: $("#searchBox").val()
+                },
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    markers = data;
+                    for (i = 0; i < markers.length; i++) {
+                        var marker = new google.maps.Marker({
+                            'position': new google.maps.LatLng(markers[i].GeoLat, markers[i].GeoLong),
+                            'map': map,
+                            'title': markers[i].Title,
+                            'icon': '@Resources.Filepaths.Icons' + "dumbbell.png"
+                        });
+                        markersMap.push(marker);
+                        // put in some information about each json object - in this case, the opening hours.
+                        var infowindow = new google.maps.InfoWindow();
+                        var content = "<div class='infoDiv'><h4>" + markers[i].Title + "</h4>"
+                                +"<p><img src='@Resources.Filepaths.Gyms"+markers[i].Logo+"' alt='Gym's logo' height='42' width='42'></p>"
+                                + "<p>" + markers[i].Desc + "</p>"
+                                + "<p>" + markers[i].Street + "</p>"
+                                + "<p>" + markers[i].City + ", " + markers[i].Zip + "</p>"
+                            + "<p>" + markers[i].Region.Name + "</p></div>"
+                        // finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                        google.maps.event.addListener(marker, 'click', (function (marker, content, infowindow) {
+                            return function () {
+                                infowindow.setContent(content);
+                                infowindow.open(map, marker);
+                            };
+                        })(marker, content, infowindow));
+                    }
+                },
+                error: function () {
+                    alert('Error occured');
+                }
+            });
+        }
+
+        function LoadCities(region) {
+            $.getJSON('/map/cities', { region: $('#selectRegion').val() }, function (result) {
+                var ddl = $('#selectCity');
+                ddl.empty();
+                $(document.createElement('option'))
+                        .attr('value', "")
+                        .text("Choose city")
+                        .appendTo(ddl);
+                $(result).each(function () {
+                    $(document.createElement('option'))
+                        .attr('value', this.Value)
+                        .text(this.Value)
+                        .appendTo(ddl);
+                });
+            })
+            MapChanged();
+        }
+
+        function ClearMarkers() {
+            for (var i = 0; i < markersMap.length; i++) {
+                markersMap[i].setMap(null);
+            }
+        }
+
+        function MapChanged() {
+            ClearMarkers();
+            UpdateMap();
+        }
+    
+
+        var resizeHiddenContent = false;
+        var contentSwitch = false; //false for primary, true for secondary
+
+        $(window).load(function () {
+            var width = $(window).width(), height = $(window).height();
+            if ((width <= 900)) {
+                $(".secondary-content").css("display","none");
+                resizeHiddenContent = true;
+            }
+        });
+
+        $(window).resize(function () {
+            var width = $(window).width(), height = $(window).height();
+            if ((width <= 900)) {
+                $(".secondary-content").hide();
+                resizeHiddenContent = true;
+            } else if (resizeHiddenContent) {
+                $(".secondary-content").show();
+                $(".primary-content").show();
+                resizeHiddenContent = false;
+            }
+        });
+
+        function SwitchContent() {
+            if (contentSwitch) {
+                $(".secondary-content").fadeOut(100, function () {
+                    $(".primary-content").fadeIn(100);
+                });
+                contentSwitch = false;
+            } else {
+                $(".primary-content").fadeOut(100, function () {
+                    $(".secondary-content").fadeIn(100);
+                });
+                contentSwitch = true;
+            }
+        }
 </script>
-@Url.Action("Test", "Map")
+
+<div id="head-background" >
+    <video id="bg-vid" playsinline autoplay muted loop poster='~/Content/Media/logo-placeholder.jpg' >
+        <source src="~/Content/Media/backvid.mp4" type="video/mp4" />
+    </video>
+    
+    
+    <div class="overlay">
+        <div id="head-content">
+              @Html.Action("GeneralPage", "Home")
+        </div>
+    </div>
+</div>
+
+<div id="offers" style="height: 200px;">
+    <div id="arrow-left" class="left">
+        <
+    </div>
+
+    <div id="arrow-right" class="right">
+        >
+    </div>
+</div>
+
+<div class="dropdown-header page-header">
+    @Html.HiddenFor(x => x.SelectActivity)
+    @Html.HiddenFor(x => x.SelectCity)
+    @Html.HiddenFor(x => x.SelectRegion)
+    @Html.HiddenFor(x => x.Search)
+    <ul class="list-inline">
+        <li>@Html.DropDownListFor(model => model.SelectRegion, Model.Regions, Html.DisplayNameFor(m =>m.Regions).ToString(), new { @onchange = "LoadCities(this);", id = "selectRegion", @class= ".nav-tabs .dropdown-menu" })</li>
+        <li>@Html.DropDownListFor(m => m.SelectCity, Enumerable.Empty<SelectListItem>(), Html.DisplayNameFor(m => m.Cities).ToString(), new { id = "selectCity", @onchange = "MapChanged();" })</li>
+        <li>@Html.DropDownListFor(m => m.SelectActivity, Model.Activities, Html.DisplayNameFor(m => m.Activities).ToString(), new { @onchange = "MapChanged();", id = "selectActivity" })</li>
+        <li><div id="addIcon"></div>Add</li>
+    <li>@Html.TextBoxFor(m => m.Search, new {placeholder = Html.DisplayNameFor(m => m.Search), id = "searchBox", @onchange = "MapChanged();" })</li>
+    </ul>   
+</div>
 
 <div id="map_canvas" style="height: 550px;"></div> 
 
-
-
-<style>
-    .infoDiv {
-        height: 200px;
-        width: 300px;
-        -webkit-user-select: none;
-        background-color: white;
-    }
-
-    #map_canvas img { 
-        max-width: none; 
-    } 
-
-</style>
 
 <div class="jumbotron">
     <h1>ASP.NET</h1>

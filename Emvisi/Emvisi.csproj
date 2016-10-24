@@ -169,15 +169,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GymsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MigrationsBI\201609242104092_BusinessInteligenceEssentials.cs" />
-    <Compile Include="MigrationsBI\201609242104092_BusinessInteligenceEssentials.Designer.cs">
-      <DependentUpon>201609242104092_BusinessInteligenceEssentials.cs</DependentUpon>
+    <Compile Include="MigrationsBI\201610051538516_GymInitial.cs" />
+    <Compile Include="MigrationsBI\201610051538516_GymInitial.Designer.cs">
+      <DependentUpon>201610051538516_GymInitial.cs</DependentUpon>
     </Compile>
     <Compile Include="MigrationsBI\Configuration.cs" />
     <Compile Include="Migrations\201609221403292_InitialCreate.cs" />
@@ -191,8 +192,10 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BusinessLogicModels.cs" />
+    <Compile Include="Models\GymViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MapViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Filepaths.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -204,9 +207,24 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Media\backvid.mp4" />
+    <Content Include="Content\Media\Best Windows Dreamscene Ever [1080p HD] #5 - YouTube [720p].mp4" />
+    <Content Include="Content\Media\Best Windows Dreamscene Ever [720p HD] #6 - YouTube [720p].mp4" />
     <Content Include="Content\Media\Icons\dumbbell.png" />
+    <Content Include="Content\Media\Icons\magnifying-glass.png" />
     <Content Include="Content\Media\Icons\swimming.png" />
     <Content Include="Content\Media\Icons\yoga.png" />
+    <Content Include="Content\Media\logo-placeholder.jpg" />
+    <Content Include="Content\Media\me-loading.mp4" />
+    <Content Include="Content\Media\Reactor Dreamscene - YouTube [720p].mp4" />
+    <Content Include="Content\Media\Slider\01.jpg" />
+    <Content Include="Content\Media\Slider\02.jpg" />
+    <Content Include="Content\Media\Slider\03.jpg" />
+    <Content Include="Content\Media\Slider\04.jpg" />
+    <Content Include="Content\Media\Slider\circle-arrow-left.png" />
+    <Content Include="Content\Media\Slider\circle-arrow-right.png" />
+    <Content Include="Content\Media\Windows DreamScene moving background - YouTube [720p].mp4" />
+    <Content Include="Content\normalize.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -217,6 +235,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -259,6 +279,14 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Gyms\Create.cshtml" />
+    <Content Include="Views\Gyms\Delete.cshtml" />
+    <Content Include="Views\Gyms\Details.cshtml" />
+    <Content Include="Views\Gyms\Edit.cshtml" />
+    <Content Include="Views\Gyms\Index.cshtml" />
+    <Content Include="Views\Gyms\ContinueGymRegistration.cshtml" />
+    <Content Include="Views\Gyms\GymRegComplete.cshtml" />
+    <Content Include="Views\Home\GeneralPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -273,8 +301,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MigrationsBI\201609242104092_BusinessInteligenceEssentials.resx">
-      <DependentUpon>201609242104092_BusinessInteligenceEssentials.cs</DependentUpon>
+    <EmbeddedResource Include="MigrationsBI\201610051538516_GymInitial.resx">
+      <DependentUpon>201610051538516_GymInitial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Filepaths.resx">
       <CustomToolNamespace>Resources</CustomToolNamespace>

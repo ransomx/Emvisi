@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
 
@@ -11,15 +14,19 @@ namespace Emvisi.Models
     {
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Gym> Gyms { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<ContactInfo> ContactInfos { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Facility> Facilities { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Region> Regions { get; set; }
 
         public BIContext(): base("name=DefaultConnection") // connection string in the application configuration file.
-    {
-
-            Configuration.LazyLoadingEnabled = false;
-            Configuration.ProxyCreationEnabled = false;
+        {
+            this.Configuration.ProxyCreationEnabled = true;
+            this.Configuration.LazyLoadingEnabled = true;
         }
 
         public static BIContext Create()
@@ -49,20 +56,14 @@ namespace Emvisi.Models
            m.MapRightKey("FacilityId");
            m.ToTable("GymFacility");
        });
-
-            /*
-             * modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        IMPORTANT: we are mapping the entity User to the same table as the entity ApplicationUser
-        modelBuilder.Entity<User>().ToTable("User"); 
-        http://stackoverflow.com/questions/28531201/entitytype-identityuserlogin-has-no-key-defined-define-the-key-for-this-entit
-             * 
-             */
         }
 
         public DbQuery<T> Query<T>() where T : class
         {
             return Set<T>().AsNoTracking();
         }
+
+
     }
 
     public class Subscription
@@ -70,7 +71,7 @@ namespace Emvisi.Models
         public int SubscriptionId { get; set; }
         public string Title { get; set; }
         public string Price { get; set; }
-        public Gym ProvidingGym { get; set; }
+        public virtual Gym Gym { get; set; }
     }
 
     public class Facility
@@ -94,8 +95,29 @@ namespace Emvisi.Models
     {
         public int AddressId { get; set; }
         public string Street { get; set; }
-        public string City { get; set; }
+        public virtual City City { get; set; }
         public string Zip { get; set; }
+    }
+
+    public class City
+    {
+        public int CityId { get; set; }
+        public string Name { get; set; }
+        public virtual Region Region { get; set; }
+    }
+
+    public class Region
+    {
+        public int RegionId { get; set; }
+        public string Name { get; set; }
+        public ICollection<City> Cities
+        {
+            get; set;
+        }
+        public Region()
+        {
+            Cities = new HashSet<City>();
+        }
     }
 
     public class Activity
@@ -115,25 +137,52 @@ namespace Emvisi.Models
         }
     }
 
+    public class Image
+    {
+        public int ImageId { get; set; }
+        public string Path { get; set; }
+        public virtual Gym Gym { get; set; }
+    }
+
+    public class Position
+    {
+        public int PositionId { get; set; }
+        public string GeoLat { get; set; }
+        public string GeoLong { get; set; }
+    }
+
+    public class ContactInfo
+    {
+        public int ContactInfoId { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public virtual Address Address { get; set; }
+    }
+
     public class Gym
     {
         public int GymId { get; set; }
         public string Title { get; set; }
-        public string Phone { get; set; }
-        public string Brand { get; set; }
-        public Address Address { get; set; }
+        public string Description { get; set; }
+        public string BrandName { get; set; }
+        public string LogoFilePath { get; set; }
 
-        public ICollection<Facility> HasFacilities
+        public virtual Position Position { get; set; }
+        public virtual ContactInfo ContactInfo { get; set; }
+
+        public virtual ICollection<Image> Images
         {
             get; set;
         }
-
-        public ICollection<Activity> HasActivities
+        public virtual ICollection<Facility> HasFacilities
         {
             get; set;
         }
-
-        public ICollection<Subscription> HasSubscriptions
+        public virtual ICollection<Activity> HasActivities
+        {
+            get; set;
+        }
+        public virtual ICollection<Subscription> HasSubscriptions
         {
             get; set;
         }
@@ -143,6 +192,7 @@ namespace Emvisi.Models
             HasFacilities = new HashSet<Facility>();
             HasActivities = new HashSet<Activity>();
             HasSubscriptions = new HashSet<Subscription>();
+            Images = new HashSet<Image>();
         }
     }
 }

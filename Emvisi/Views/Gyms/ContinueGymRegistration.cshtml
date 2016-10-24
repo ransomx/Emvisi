@@ -1,0 +1,76 @@
+﻿@model Emvisi.Models.RegisterGymModel
+
+<div class="side-by-side">
+    @using (Ajax.BeginForm("CompleteGymRegistration", "Gyms",
+                                        new AjaxOptions
+                                        {
+                                            UpdateTargetId = "head-content",
+                                            InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace,
+                                            HttpMethod = "POST",
+                                            LoadingElementId = "loader-overlay",
+                                            OnBegin = "onBeginLoadView",
+                                            OnComplete = "onCompleteLoadView",
+                                        }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h2>Where is your gym?</h2>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Street, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-sm-10">
+                    @Html.EditorFor(model => model.Street, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Street, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Zip, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Zip, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Zip, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.GeoLat, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.GeoLat, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.GeoLat, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.GeoLoc, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.GeoLoc, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.GeoLoc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @Html.HiddenFor(x => x.SelectCity)
+            @Html.HiddenFor(x => x.SelectRegion)
+            <div class="form-group">
+                @Html.LabelFor(model => model.SelectRegion, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.SelectRegion, Model.Regions, Html.DisplayNameFor(m => m.Regions).ToString(), new { @onchange = "LoadCities(this);", @class = ".nav-tabs .dropdown-menu", id = "selRegion" })
+                    @Html.ValidationMessageFor(model => model.GeoLoc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SelectCity, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(m => m.SelectCity, Enumerable.Empty<SelectListItem>(), Html.DisplayNameFor(m => m.Cities).ToString(), new { id = "selCity" })
+                    @Html.ValidationMessageFor(model => model.GeoLoc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }

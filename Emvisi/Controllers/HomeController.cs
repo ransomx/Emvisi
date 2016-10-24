@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Emvisi.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,16 +9,38 @@ namespace Emvisi.Controllers
 {
     public class HomeController : Controller
     {
+     private BIContext db = new BIContext();
+
         public ActionResult Index()
         {
-            return View();
+            MapViewModels model = new MapViewModels();
+            model.Regions = db.Regions.ToList().Select(x => new SelectListItem{
+                Value = x.Name,
+                Text = x.Name
+            });
+            model.Activities = db.Activities.ToList().Select(x => new SelectListItem
+            {
+                Value = x.Title,
+                Text = x.Title
+            });
+            model.Cities = db.Cities.ToList().Select(x => new SelectListItem
+            {
+                Value = x.Name,
+                Text = x.Name
+            });
+            return View(model);
         }
 
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
 
-            return View();
+            return PartialView();
+        }
+
+        public ActionResult GeneralPage()
+        {
+            return PartialView();
         }
 
         public ActionResult Contact()

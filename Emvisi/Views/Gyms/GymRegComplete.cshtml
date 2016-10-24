@@ -1,0 +1,18 @@
+﻿@model Emvisi.Models.RegisterGymModel
+
+<div class="side-by-side">
+    Your gym has been created, you can continue managing it..
+    <br />
+    @Ajax.ActionLink("Return back", "GeneralPage", "Home",
+    new AjaxOptions
+    {
+        HttpMethod = "GET", // HttpMethod to use, GET or POST
+        UpdateTargetId = "head-content", // ID of the HTML element to update
+        InsertionMode = InsertionMode.Replace, // Replace the existing contents
+        LoadingElementId = "loader-overlay",
+    })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -335,6 +335,7 @@ textarea {
 }
 
 a {
+  transition: color 128ms ease;
   color: #428bca;
   text-decoration: none;
 }
@@ -2174,7 +2175,10 @@ fieldset[disabled] .btn-warning.active {
 .btn-danger {
   color: #ffffff;
   background-color: #d9534f;
+  padding: 5px 15px 5px 15px;
+  opacity: 0.9;
   border-color: #d43f3a;
+  transition: background-color 128ms ease;
 }
 
 .btn-danger:hover,
